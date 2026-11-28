@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ const selectClass =
 
 export function EditItemDialog({ isOpen, onClose, item, types, ppeClassifications, units }: Props) {
     const { data, setData, put, errors, processing } =
-        useForm<ItemUpdateRequest>({
+        useForm<ItemUpdateRequest & { image?: File | null; remove_image?: boolean }>({
             item_code: item.item_code,
             item_name: item.item_name,
             description: item.description ?? '',
@@ -41,9 +42,27 @@ export function EditItemDialog({ isOpen, onClose, item, types, ppeClassification
             ppe_classification_id: item.ppe_classification_id,
             unit_id: item.unit_id,
             unit_cost: Number(item.unit_cost),
-            reorder_point: item.reorder_point,
             is_active: item.is_active,
+            image: null,
+            remove_image: false,
         });
+
+    const [preview, setPreview] = useState<string | null>(item.image_url ?? null);
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0] ?? null;
+        setData('image', file);
+        if (file) {
+            setPreview(URL.createObjectURL(file));
+            setData('remove_image', false);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setData('image', null);
+        setData('remove_image', true);
+        setPreview(null);
+    };
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -188,22 +207,6 @@ export function EditItemDialog({ isOpen, onClose, item, types, ppeClassification
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="reorder_point">Reorder Point</Label>
-                            <Input
-                                id="reorder_point"
-                                name="reorder_point"
-                                type="number"
-                                min="0"
-                                value={data.reorder_point ?? 0}
-                                onChange={(event) =>
-                                    setData('reorder_point', event.target.value ? Number(event.target.value) : 0)
-                                }
-                                placeholder="0"
-                            />
-                            <InputError message={errors.reorder_point} />
-                        </div>
-
                         <div className="flex items-center space-x-2">
                             <input
                                 id="is_active"
@@ -214,6 +217,30 @@ export function EditItemDialog({ isOpen, onClose, item, types, ppeClassification
                             />
                             <Label htmlFor="is_active">Active</Label>
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="image">Image</Label>
+                        {preview && (
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="mb-2 h-32 w-32 rounded-md object-cover border"
+                            />
+                        )}
+                        <Input
+                            id="image"
+                            name="image"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
+                        {preview && (
+                            <Button type="button" variant="outline" size="sm" onClick={handleRemoveImage}>
+                                Remove Image
+                            </Button>
+                        )}
+                        <InputError message={errors.image} />
                     </div>
 
                     <DialogFooter className="mt-4">

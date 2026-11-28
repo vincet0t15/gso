@@ -97,6 +97,7 @@ export default function ItemsIndex({ items, filters, types, ppeClassifications, 
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Image</TableHead>
                                 <TableHead>Code</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Type</TableHead>
@@ -111,6 +112,17 @@ export default function ItemsIndex({ items, filters, types, ppeClassifications, 
                             {items.data.length > 0 ? (
                                 items.data.map((item) => (
                                     <TableRow key={item.id}>
+                                        <TableCell>
+                                            {item.image_url ? (
+                                                <img
+                                                    src={item.image_url}
+                                                    alt={item.item_name}
+                                                    className="h-10 w-10 rounded-md object-cover border"
+                                                />
+                                            ) : (
+                                                <span className="text-muted-foreground">—</span>
+                                            )}
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {item.item_code}
                                         </TableCell>
@@ -164,7 +176,7 @@ export default function ItemsIndex({ items, filters, types, ppeClassifications, 
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+                                    <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
                                         No items found.
                                     </TableCell>
                                 </TableRow>

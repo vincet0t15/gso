@@ -4,8 +4,10 @@ use App\Models\Item;
 use App\Models\PpeClassification;
 use App\Models\Type;
 use App\Models\Unit;
-use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
 
 function itemUser(array $permissions = ['items.view']): User
 {
@@ -154,15 +156,13 @@ test('an item can be updated', function () {
             'item_code' => 'ITM-0001',
             'item_name' => 'New Name',
             'unit_cost' => 200.00,
-            'reorder_point' => 10,
         ])
         ->assertRedirect();
 
     $item->refresh();
 
     expect($item->item_name)->toBe('New Name')
-        ->and((float) $item->unit_cost)->toBe(200.00)
-        ->and($item->reorder_point)->toBe(10);
+        ->and((float) $item->unit_cost)->toBe(200.00);
 });
 
 test('an item may keep its own code when updated', function () {
@@ -206,6 +206,39 @@ test('updating an item requires the update permission', function () {
         ->assertForbidden();
 
     expect($item->refresh()->item_name)->toBe('Bond Paper');
+});
+
+test('an item can be created with an image', function () {
+    Storage::fake('public');
+
+    $this->actingAs(itemUser(['items.create']))
+        ->post(route('items.store'), [
+            'item_code' => 'ITM-IMG',
+            'item_name' => 'Item With Image',
+            'image' => UploadedFile::fake()->image('item.jpg'),
+        ])
+        ->assertRedirect();
+
+    $item = Item::query()->where('item_code', 'ITM-IMG')->sole();
+
+    expect($item->image)->not->toBeNull();
+    Storage::disk('public')->assertExists($item->image);
+});
+
+test('an item image can be removed on update', function () {
+    Storage::fake('public');
+
+    $item = Item::factory()->create(['image' => UploadedFile::fake()->image('old.jpg')->store('items', 'public')]);
+
+    $this->actingAs(itemUser(['items.update']))
+        ->put(route('items.update', $item), [
+            'item_code' => $item->item_code,
+            'item_name' => $item->item_name,
+            'remove_image' => true,
+        ])
+        ->assertRedirect();
+
+    expect($item->fresh()->image)->toBeNull();
 });
 
 test('an item can be deleted', function () {

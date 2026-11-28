@@ -25,7 +25,6 @@ class ItemFactory extends Factory
             'ppe_classification_id' => PpeClassification::factory(),
             'unit_id' => Unit::factory(),
             'unit_cost' => fake()->randomFloat(2, 10, 5000),
-            'reorder_point' => fake()->numberBetween(0, 20),
             'is_active' => true,
         ];
     }

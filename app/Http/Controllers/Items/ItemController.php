@@ -12,6 +12,7 @@ use App\Models\Unit;
 use App\Repositories\Contracts\ItemRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -40,7 +41,13 @@ class ItemController extends Controller
 
     public function store(StoreItemRequest $request): RedirectResponse
     {
-        $this->items->create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('items', 'public');
+        }
+
+        $this->items->create($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Item created.')]);
 
@@ -49,7 +56,23 @@ class ItemController extends Controller
 
     public function update(UpdateItemRequest $request, Item $item): RedirectResponse
     {
-        $this->items->update($item, $request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            if ($item->image) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $data['image'] = $request->file('image')->store('items', 'public');
+        } elseif ($request->boolean('remove_image')) {
+            if ($item->image) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $data['image'] = null;
+        } else {
+            unset($data['image']);
+        }
+
+        $this->items->update($item, $data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Item updated.')]);
 
@@ -58,6 +81,10 @@ class ItemController extends Controller
 
     public function destroy(Item $item): RedirectResponse
     {
+        if ($item->image) {
+            Storage::disk('public')->delete($item->image);
+        }
+
         $this->items->delete($item);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Item deleted.')]);

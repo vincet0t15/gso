@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import itemsRoutes from '@/routes/items';
 import type { ItemCreateRequest } from '@/types/item';
+import { useState } from 'react';
 import type { FormEvent } from 'react';
 
 type Option = { id: number; name: string; code?: string };
@@ -36,13 +37,25 @@ export function CreateItemDialog({ isOpen, onClose, types, ppeClassifications, u
             item_code: '',
             item_name: '',
             description: '',
+            image: null,
             type_id: null,
             ppe_classification_id: null,
             unit_id: null,
             unit_cost: 0,
-            reorder_point: 0,
             is_active: true,
         });
+
+    const [preview, setPreview] = useState<string | null>(null);
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0] ?? null;
+        setData('image', file);
+        if (file) {
+            setPreview(URL.createObjectURL(file));
+        } else {
+            setPreview(null);
+        }
+    };
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -192,21 +205,25 @@ export function CreateItemDialog({ isOpen, onClose, types, ppeClassifications, u
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="reorder_point">Reorder Point</Label>
-                            <Input
-                                id="reorder_point"
-                                name="reorder_point"
-                                type="number"
-                                min="0"
-                                value={data.reorder_point ?? 0}
-                                onChange={(event) =>
-                                    setData('reorder_point', event.target.value ? Number(event.target.value) : 0)
-                                }
-                                placeholder="0"
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="image">Image</Label>
+                        <Input
+                            id="image"
+                            name="image"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
+                        {preview && (
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="mt-2 h-32 w-32 rounded-md object-cover border"
                             />
-                            <InputError message={errors.reorder_point} />
-                        </div>
+                        )}
+                        <InputError message={errors.image} />
                     </div>
 
                     <DialogFooter className="mt-4">

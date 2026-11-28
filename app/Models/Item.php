@@ -9,17 +9,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['item_code', 'item_name', 'description', 'type_id', 'ppe_classification_id', 'unit_id', 'unit_cost', 'reorder_point', 'is_active'])]
+#[Fillable(['item_code', 'item_name', 'description', 'image', 'type_id', 'ppe_classification_id', 'unit_id', 'unit_cost', 'is_active'])]
 class Item extends Model
 {
     /** @use HasFactory<ItemFactory> */
     use HasFactory;
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? asset('storage/'.$this->image) : null;
+    }
+
     protected function casts(): array
     {
         return [
             'unit_cost' => 'decimal:2',
-            'reorder_point' => 'integer',
             'is_active' => 'boolean',
         ];
     }
