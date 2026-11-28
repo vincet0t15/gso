@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Building2, FolderGit2, LayoutGrid, Package, Ruler, Tag } from 'lucide-react';
+import { BookOpen, Boxes, Building2, FolderGit2, LayoutGrid, Package, Ruler, Tag } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -14,6 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import itemsRoutes from '@/routes/items';
 import officesRoutes from '@/routes/offices';
 import ppeClassificationsRoutes from '@/routes/ppe-classifications';
 import typesRoutes from '@/routes/types';
@@ -45,6 +46,11 @@ const mainNavItems: NavItem[] = [
         title: 'Units of Measure',
         href: unitsRoutes.index().url,
         icon: Ruler,
+    },
+    {
+        title: 'Items',
+        href: itemsRoutes.index().url,
+        icon: Boxes,
     },
 ];
 

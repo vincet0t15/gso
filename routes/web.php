@@ -13,3 +13,4 @@ require __DIR__.'/offices.php';
 require __DIR__.'/types.php';
 require __DIR__.'/ppe-classifications.php';
 require __DIR__.'/units.php';
+require __DIR__.'/items.php';

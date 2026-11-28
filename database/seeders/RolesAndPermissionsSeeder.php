@@ -34,6 +34,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'units.create',
             'units.update',
             'units.delete',
+            'items.view',
+            'items.create',
+            'items.update',
+            'items.delete',
         ];
 
         foreach ($permissions as $permission) {
@@ -43,7 +47,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'admin' => $permissions,
-            'gso_staff' => ['offices.view', 'offices.create', 'offices.update', 'offices.delete', 'types.view', 'types.create', 'types.update', 'types.delete', 'ppe-classifications.view', 'ppe-classifications.create', 'ppe-classifications.update', 'ppe-classifications.delete', 'units.view', 'units.create', 'units.update', 'units.delete'],
+            'gso_staff' => ['offices.view', 'offices.create', 'offices.update', 'offices.delete', 'types.view', 'types.create', 'types.update', 'types.delete', 'ppe-classifications.view', 'ppe-classifications.create', 'ppe-classifications.update', 'ppe-classifications.delete', 'units.view', 'units.create', 'units.update', 'units.delete', 'items.view', 'items.create', 'items.update', 'items.delete'],
             'office_user' => ['offices.view'],
             'approver' => ['offices.view'],
         ];
