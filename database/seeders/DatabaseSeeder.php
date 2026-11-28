@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PpeClassificationSeeder::class);
         $this->call(OfficeSeeder::class);
         $this->call(TypeSeeder::class);
+        $this->call(UnitSeeder::class);
 
         $testUser = User::factory()->create([
             'name' => 'Test User',

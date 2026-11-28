@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Building2, FolderGit2, LayoutGrid, Package, Tag } from 'lucide-react';
+import { BookOpen, Building2, FolderGit2, LayoutGrid, Package, Ruler, Tag } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -17,6 +17,7 @@ import { dashboard } from '@/routes';
 import officesRoutes from '@/routes/offices';
 import ppeClassificationsRoutes from '@/routes/ppe-classifications';
 import typesRoutes from '@/routes/types';
+import unitsRoutes from '@/routes/units';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -39,6 +40,11 @@ const mainNavItems: NavItem[] = [
         title: 'PPE Classifications',
         href: ppeClassificationsRoutes.index().url,
         icon: Package,
+    },
+    {
+        title: 'Units of Measure',
+        href: unitsRoutes.index().url,
+        icon: Ruler,
     },
 ];
 
