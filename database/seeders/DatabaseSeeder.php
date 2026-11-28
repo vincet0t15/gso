@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(PpeClassificationSeeder::class);
+        $this->call(OfficeSeeder::class);
+        $this->call(TypeSeeder::class);
 
         $testUser = User::factory()->create([
             'name' => 'Test User',

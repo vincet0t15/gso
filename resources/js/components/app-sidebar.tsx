@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Building2, FolderGit2, LayoutGrid } from 'lucide-react';
+import { BookOpen, Building2, FolderGit2, LayoutGrid, Package, Tag } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import officesRoutes from '@/routes/offices';
+import ppeClassificationsRoutes from '@/routes/ppe-classifications';
+import typesRoutes from '@/routes/types';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -27,6 +29,16 @@ const mainNavItems: NavItem[] = [
         title: 'Offices',
         href: officesRoutes.index().url,
         icon: Building2,
+    },
+    {
+        title: 'Types',
+        href: typesRoutes.index().url,
+        icon: Tag,
+    },
+    {
+        title: 'PPE Classifications',
+        href: ppeClassificationsRoutes.index().url,
+        icon: Package,
     },
 ];
 
